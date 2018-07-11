@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "author": "Moe Zilla",
   "bin": {
-    "shield-linter": "node bin/shield-linter.js"
+    "shield-linter": "bin/shield-linter.js"
   },
   "bugs": {
     "url": "https://github.com/pdehaan/shield-linter/issues"
