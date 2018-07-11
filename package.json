@@ -1,0 +1,23 @@
+{
+  "name": "shield-linter",
+  "description": "Let's try and validate some shield study settings and configs.",
+  "version": "1.0.0",
+  "author": "Moe Zilla",
+  "bin": {
+    "shield-linter": "node bin/shield-linter.js"
+  },
+  "bugs": {
+    "url": "https://github.com/pdehaan/shield-linter/issues"
+  },
+  "dependencies": {
+    "meow": "^5.0.0"
+  },
+  "homepage": "https://github.com/pdehaan/shield-linter#readme",
+  "keywords": [],
+  "license": "MPL-2.0",
+  "main": "index.js",
+  "repository": "pdehaan/shield-linter",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
