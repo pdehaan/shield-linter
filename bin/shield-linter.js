@@ -28,52 +28,46 @@ const cli = meow(`
   }
 });
 
-if (cli.flags.manifestPath) {
-  let manifest;
+function main({flags}) {
+  flags.manifestPath && lintManifest(flags.manifestPath);
+  flags.packagePath && lintPackage(flags.packagePath);
+}
+
+/**
+ * Lint the Shield study's manifest.json file. If no manifest.json file is foudn, no manifest.json specific rules will be run.
+ * @param  {string} manifestPath Relative/absolute path to a Shield study's manifest.json file.
+ * @return {void}
+ */
+function lintManifest(manifestPath) {
+  _loadConfig(manifestPath, "../rules/manifest/index");
+}
+
+/**
+ * Lint the Shield study's package.json file. If no package.json file is found, no package.json specific rules will be run.
+ * @param  {string} packagePath Relative/absolute path to a Shield study's package.json file.
+ * @return {void}
+ */
+function lintPackage(packagePath) {
+  _loadConfig(packagePath, "../rules/package/index");
+}
+
+/**
+ * @private
+ * Load a manifest.json or package.json file and run the appropriate rules/tests.
+ * @param  {string} cfgPath      Relative/absolute path to the manifest.json or package.json config file.
+ * @param  {string} cfgRulesPath Relative path to the config specific rules to run.
+ * @return {void}
+ */
+function _loadConfig(cfgPath, cfgRulesPath) {
   try {
-    manifest = require(path.resolve(cli.flags.manifestPath));
+    const rules = require(cfgRulesPath);
+    const cfg = require(path.resolve(cfgPath));
+    Object.values(rules).forEach(rule => rule(cfg));
   } catch (err) {
     console.error(err.message);
     process.exitCode = 1;
     return;
   }
-
-  const applicationId = manifest.applications.gecko.id;
-  const allowedGeckoIds = ["@shield.mozilla.org", "@pioneer.mozilla.org"];
-  const hasAllowedGeckoId  = allowedGeckoIds.filter(suffix => applicationId.endsWith(suffix));
-
-  if (hasAllowedGeckoId.length === 0) {
-    console.warn(`manifest.json\'s applications.gecko.id does not end with ${allowedGeckoIds.join("|")}. Found ${applicationId}`);
-  }
-
-  const version = manifest.version;
-  if (version.split(".").length !== 3) {
-    console.log(`Unexpected version number format. Expected major.minor.patch, got ${version}`);
-  }
 }
 
-if (cli.flags.packagePath) {
-  const addonUtilsPackage = "shield-studies-addon-utils";
-  const addonUtilsMinVersion = 5;
-
-  let package;
-  try {
-    package = require(path.resolve(cli.flags.packagePath));
-  } catch (err) {
-    console.error(err.message);
-    process.exitCode = 1;
-    return;
-  }
-
-  const allDependencies = Object.assign({}, package.dependencies, package.devDependencies);
-  const hasAddonUtils = Object.keys(allDependencies).includes(addonUtilsPackage);
-  if (hasAddonUtils) {
-    const [major, minor, patch] = allDependencies[addonUtilsPackage].split(".");
-    if (major < addonUtilsMinVersion) {
-      console.log(`Expected ${addonUtilsPackage}@${addonUtilsMinVersion} or newer, found ${major}`);
-    }
-  } else {
-    console.info("Shield study is not using `shield-studies-addon-utils`.");
-  }
-
-}
+main(cli);
