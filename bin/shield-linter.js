@@ -34,7 +34,7 @@ function main({flags}) {
 }
 
 /**
- * Lint the Shield study's manifest.json file. If no manifest.json file is foudn, no manifest.json specific rules will be run.
+ * Lint the Shield study's manifest.json file. If no manifest.json file is found, no manifest.json specific rules will be run.
  * @param  {string} manifestPath Relative/absolute path to a Shield study's manifest.json file.
  * @return {void}
  */
