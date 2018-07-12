@@ -11,13 +11,20 @@ function rule(package) {
 
   const allDependencies = Object.assign({}, package.dependencies, package.devDependencies);
   const hasAddonUtils = Object.keys(allDependencies).includes(addonUtilsPackage);
+
   if (!hasAddonUtils) {
     console.info(`${package.name} shield study is not using ${addonUtilsPackage}`);
     return;
   }
+
   const addonUtilsPackageVersion = allDependencies[addonUtilsPackage];
+  if (!semver.validRange(addonUtilsPackageVersion)) {
+    console.warn(`Invalid ${addonUtilsPackage} version. Found ${addonUtilsPackageVersion}`);
+    return;
+  }
   if (!semver.ltr(addonUtilsMinVersion, addonUtilsPackageVersion)) {
-    console.log(`Expected ${addonUtilsPackage}@${addonUtilsMinVersion} or newer, found ${addonUtilsPackageVersion}`);
+    console.log(`Expected ${addonUtilsPackage}@${addonUtilsMinVersion} or newer. Found ${addonUtilsPackageVersion}`);
+    return;
   }
 }
 
