@@ -9,15 +9,18 @@ module.exports = class ExperimentApis extends Rule {
    * @constructor
    * @param  {object} cfg     Contents of the manifest.json file.
    * @param  {string} cfgPath Path to the manifest.json file.
+   * @param  {object} flags   Flags via the CLI parser.
    */
-  constructor(cfg, cfgPath) {
-    super(cfgPath);
+  constructor(cfg, cfgPath, flags) {
+    super(cfgPath, flags, "rules/manifest/experiment-apis");
     this.manifest = cfg;
     this.manifestDir = dirname(cfgPath);
     this.experimentApisKey = "experiment_apis";
   }
 
   validate() {
+    this.logger.verbose(this.name);
+
     if (!this.manifest.hasOwnProperty(this.experimentApisKey)) {
       this.logger.warn(`Missing "${this.experimentApisKey}" key`);
       return;

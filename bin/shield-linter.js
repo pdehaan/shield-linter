@@ -24,6 +24,11 @@ const cli = meow(`
     packagePath: {
       type: String,
       alias: "p"
+    },
+    verbose: {
+      type: Boolean,
+      alias: "v",
+      default: process.env.VERBOSE || false
     }
   }
 });
@@ -31,8 +36,8 @@ const cli = meow(`
 function main({flags}) {
   const {manifestPath, packagePath} = flags;
 
-  manifestPath && lintManifest(manifestPath);
-  packagePath && lintPackage(packagePath);
+  manifestPath && lintManifest(manifestPath, flags);
+  packagePath && lintPackage(packagePath, flags);
 }
 
 /**
@@ -40,8 +45,8 @@ function main({flags}) {
  * @param  {string} manifestPath Relative/absolute path to a Shield study's manifest.json file.
  * @return {void}
  */
-function lintManifest(manifestPath) {
-  _loadConfig(manifestPath, "../rules/manifest");
+function lintManifest(manifestPath, flags) {
+  _loadConfig(manifestPath, "../rules/manifest", flags);
 }
 
 /**
@@ -49,8 +54,8 @@ function lintManifest(manifestPath) {
  * @param  {string} packagePath Relative/absolute path to a Shield study's package.json file.
  * @return {void}
  */
-function lintPackage(packagePath) {
-  _loadConfig(packagePath, "../rules/package");
+function lintPackage(packagePath, flags) {
+  _loadConfig(packagePath, "../rules/package", flags);
 }
 
 /**
@@ -60,10 +65,10 @@ function lintPackage(packagePath) {
  * @param  {string} cfgRulesPath Relative path to the config specific rules to run.
  * @return {void}
  */
-function _loadConfig(cfgPath, cfgRulesPath) {
+function _loadConfig(cfgPath, cfgRulesPath, flags) {
   try {
     const cfg = require(path.resolve(cfgPath));
-    const rules = require(cfgRulesPath)(cfg, cfgPath);
+    const rules = require(cfgRulesPath)(cfg, cfgPath, flags);
 
     for (const rule of rules) {
       rule.validate();
