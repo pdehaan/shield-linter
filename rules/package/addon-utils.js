@@ -16,7 +16,7 @@ function rule(package) {
     return;
   }
   const addonUtilsPackageVersion = allDependencies[addonUtilsPackage];
-  if (!semver.satisfies(addonUtilsMinVersion, addonUtilsPackageVersion)) {
+  if (!semver.ltr(addonUtilsMinVersion, addonUtilsPackageVersion)) {
     console.log(`Expected ${addonUtilsPackage}@${addonUtilsMinVersion} or newer, found ${addonUtilsPackageVersion}`);
   }
 }
