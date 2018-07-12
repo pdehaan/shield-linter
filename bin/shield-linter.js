@@ -29,8 +29,10 @@ const cli = meow(`
 });
 
 function main({flags}) {
-  flags.manifestPath && lintManifest(flags.manifestPath);
-  flags.packagePath && lintPackage(flags.packagePath);
+  const {manifestPath, packagePath} = flags;
+
+  manifestPath && lintManifest(manifestPath);
+  packagePath && lintPackage(packagePath);
 }
 
 /**
@@ -39,7 +41,7 @@ function main({flags}) {
  * @return {void}
  */
 function lintManifest(manifestPath) {
-  _loadConfig(manifestPath, "../rules/manifest/index");
+  _loadConfig(manifestPath, "../rules/manifest");
 }
 
 /**
@@ -48,7 +50,7 @@ function lintManifest(manifestPath) {
  * @return {void}
  */
 function lintPackage(packagePath) {
-  _loadConfig(packagePath, "../rules/package/index");
+  _loadConfig(packagePath, "../rules/package");
 }
 
 /**
@@ -60,12 +62,15 @@ function lintPackage(packagePath) {
  */
 function _loadConfig(cfgPath, cfgRulesPath) {
   try {
-    const rules = require(cfgRulesPath);
     const cfg = require(path.resolve(cfgPath));
-    Object.values(rules).forEach(rule => rule(cfg, cfgPath));
+    const rules = require(cfgRulesPath)(cfg, cfgPath);
+
+    for (const rule of rules) {
+      rule.validate();
+    }
+
   } catch (err) {
-    console.error(err.message);
-    process.exitCode = 1;
+    console.error(`${path.basename(cfgPath)}:`, err);
     return;
   }
 }
