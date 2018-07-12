@@ -1,34 +1,48 @@
-const fs = require("fs");
-const path = require("path");
+const {dirname, join} = require("path");
+const {Rule, fileExists} = require("../../lib");
 
 /**
  * Checks that the manifest.json's `experiment_apis` key exists and has valid files specified for `schema` and `parent.script` keys.
- * @param  {object} manifest Contents of the manifest.json file.
- * @param  {string} manifestPath Path to the specified manifest.json file.
- * @return {void}
  */
-function rule(manifest, manifestPath) {
-  if (!manifest.hasOwnProperty("experiment_apis")) {
-    console.warn("manifest.json is missing 'experiment_apis' key");
-    return;
+module.exports = class ExperimentApis extends Rule {
+  /**
+   * @constructor
+   * @param  {object} cfg     Contents of the manifest.json file.
+   * @param  {string} cfgPath Path to the manifest.json file.
+   */
+  constructor(cfg, cfgPath) {
+    super(cfgPath);
+    this.manifest = cfg;
+    this.manifestDir = dirname(cfgPath);
+    this.experimentApisKey = "experiment_apis";
   }
-  const manifestDir = path.dirname(manifestPath);
-  for (const {schema, parent} of Object.values(manifest.experiment_apis)) {
-    if (schema) {
-      checkFile(manifestDir, schema, "schema");
-    }
-    if (parent && parent.script) {
-      checkFile(manifestDir, parent.script, "parent.script");
-    }
-  }
-}
 
-module.exports = rule;
+  validate() {
+    if (!this.manifest.hasOwnProperty(this.experimentApisKey)) {
+      this.logger.warn(`Missing "${this.experimentApisKey}" key`);
+      return;
+    }
 
-function checkFile(manifestDir, file, label) {
-  try {
-    fs.accessSync(path.join(manifestDir, file), fs.constants.R_OK);
-  } catch (err) {
-    console.error(`Missing 'experiment_apis' ${label} path: ${file}`);
+    for (const {schema, parent} of Object.values(this.manifest.experiment_apis)) {
+      if (schema) {
+        try {
+          fileExists(join(this.manifestDir, schema));
+        } catch (err) {
+          this.logger.error(`Missing "${this.experimentApisKey}...schema" file: ${schema}`)
+        }
+      } else {
+        this.logger.error(`Missing "${this.experimentApisKey}...schema" key in manifest.json`);
+      }
+
+      if (parent && parent.script) {
+        try {
+          fileExists(join(this.manifestDir, parent.script));
+        } catch (err) {
+          this.logger.error(`Missing "${this.experimentApisKey}...parent.script" file: ${parent.script}`);
+        }
+      } else {
+        this.logger.error(`Missing "${this.experimentApisKey}...parent.script" key in manifest.json`);
+      }
+    }
   }
-}
+};

@@ -19,7 +19,6 @@
   "homepage": "https://github.com/pdehaan/shield-linter#readme",
   "keywords": [],
   "license": "MPL-2.0",
-  "main": "index.js",
   "repository": "pdehaan/shield-linter",
   "scripts": {
     "lint": "eslint .",

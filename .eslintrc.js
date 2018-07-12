@@ -14,6 +14,6 @@ module.exports = {
     "no-var": "error",
     "one-var": ["error", "never"],
     "prefer-const": "error",
-    "quotes": ["error", "double"]
+    "quotes": ["error", "double", {avoidEscape: true, allowTemplateLiterals: true}]
   }
 };

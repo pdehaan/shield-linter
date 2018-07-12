@@ -1,9 +1,5 @@
-const applicationsGeckoId = require("./applications-gecko-id");
-const experimentApis = require("./experiment-apis");
-const version = require("./version");
-
-module.exports = {
-  applicationsGeckoId,
-  experimentApis,
-  version
-};
+module.exports = (...args) => [
+  require("./applications-gecko-id"),
+  require("./experiment-apis"),
+  require("./version"),
+].map(rule => new rule(...args));
