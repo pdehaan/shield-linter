@@ -62,7 +62,7 @@ function _loadConfig(cfgPath, cfgRulesPath) {
   try {
     const rules = require(cfgRulesPath);
     const cfg = require(path.resolve(cfgPath));
-    Object.values(rules).forEach(rule => rule(cfg));
+    Object.values(rules).forEach(rule => rule(cfg, cfgPath));
   } catch (err) {
     console.error(err.message);
     process.exitCode = 1;
