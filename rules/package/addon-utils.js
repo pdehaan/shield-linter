@@ -7,12 +7,12 @@ const {Rule} = require("../../lib");
 module.exports = class AddonUtils extends Rule {
   /**
    * @constructor
-   * @param  {object} pkg         Contents of the package.json file.
-   * @param  {object} packagePath Path of the package.json file.
+   * @param  {object} cfg     Contents of the package.json file.
+   * @param  {string} cfgPath Path to the package.json file.
    */
-  constructor(pkg, packagePath) {
-    super(packagePath);
-    this.package = pkg;
+  constructor(cfg, cfgPath) {
+    super(cfgPath);
+    this.package = cfg;
     this.addonUtilsPackage = "shield-studies-addon-utils";
     this.addonUtilsMinVersion = "5.0.0";
   }

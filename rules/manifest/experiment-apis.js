@@ -7,27 +7,26 @@ const {Rule, fileExists} = require("../../lib");
 module.exports = class ExperimentApis extends Rule {
   /**
    * @constructor
-   * @param  {object} manifest     Contents of the manifest.json file.
-   * @param  {string} manifestPath Path to the specified manifest.json file.
+   * @param  {object} cfg     Contents of the manifest.json file.
+   * @param  {string} cfgPath Path to the manifest.json file.
    */
-  constructor(manifest, manifestPath) {
-    super(manifestPath);
-    this.manifest = manifest;
-    this.manifestPath = manifestPath;
+  constructor(cfg, cfgPath) {
+    super(cfgPath);
+    this.manifest = cfg;
+    this.manifestDir = dirname(cfgPath);
     this.experimentApisKey = "experiment_apis";
   }
 
   validate() {
     if (!this.manifest.hasOwnProperty(this.experimentApisKey)) {
-      this.logger.warn(`missing "${this.experimentApisKey}" key`);
+      this.logger.warn(`Missing "${this.experimentApisKey}" key`);
       return;
     }
 
-    const manifestDir = dirname(this.manifestPath);
     for (const {schema, parent} of Object.values(this.manifest.experiment_apis)) {
       if (schema) {
         try {
-          fileExists(join(manifestDir, schema));
+          fileExists(join(this.manifestDir, schema));
         } catch (err) {
           this.logger.error(`Missing "${this.experimentApisKey}...schema" file: ${schema}`)
         }
@@ -37,7 +36,7 @@ module.exports = class ExperimentApis extends Rule {
 
       if (parent && parent.script) {
         try {
-          fileExists(join(manifestDir, parent.script));
+          fileExists(join(this.manifestDir, parent.script));
         } catch (err) {
           this.logger.error(`Missing "${this.experimentApisKey}...parent.script" file: ${parent.script}`);
         }

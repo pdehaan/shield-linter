@@ -6,21 +6,22 @@ const {Rule} = require("../../lib");
 module.exports = class ApplicationsGeckoId extends Rule {
   /**
    * @constructor
-   * @param  {object} manifest Contents of the manifest.json file.
-   * @return {void}
+   * @param  {object} cfg     Contents of the manifest.json file.
+   * @param  {string} cfgPath Path to the manifest.json file.
    */
-  constructor(manifest, manifestPath) {
-    super(manifestPath);
-    this.manifest = manifest;
+  constructor(cfg, cfgPath) {
+    super(cfgPath);
+    this.manifest = cfg;
   }
 
   validate() {
     try {
       const applicationId = this.manifest.applications.gecko.id;
       const allowedGeckoIds = ["shield", "pioneer"].map(value => `@${value}.mozilla.org`);
+      const allowedGeckoStrings = allowedGeckoIds.join(" or ");
 
       if (!allowedGeckoIds.some(suffix => applicationId.endsWith(suffix))) {
-        this.logger.warn(`"applications.gecko.id" does not end with ${allowedGeckoIds.join(" or ")}. Found ${applicationId}`);
+        this.logger.warn(`"applications.gecko.id" does not end with ${allowedGeckoStrings}. Found ${applicationId}`);
       }
     } catch (err) {
       this.logger.error(err);

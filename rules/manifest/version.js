@@ -6,18 +6,18 @@ const {Rule} = require("../../lib");
 module.exports = class Version extends Rule {
   /**
    * @constructor
-   * @param  {object} manifest Contents of the manifest.json file.
-   * @return {void}
+   * @param  {object} cfg     Contents of the manifest.json file.
+   * @param  {string} cfgPath Path to the manifest.json file.
    */
-  constructor(manifest, manifestPath) {
-    super(manifestPath);
-    this.manifest = manifest;
+  constructor(cfg, cfgPath) {
+    super(cfgPath);
+    this.manifest = cfg;
   }
 
   validate() {
     const {version} = this.manifest;
     if (version.split(".").length < 2) {
-      this.logger.log(`Unexpected version number format. Expected major.minor[.patch], got ${version}`);
+      this.logger.log(`Unexpected version number format. Expected "major.minor[.patch]", got ${version}`);
     }
   }
 };
