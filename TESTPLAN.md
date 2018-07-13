@@ -18,9 +18,10 @@ I've been casually testing on a random assortment of current and past Shield stu
 
 - https://github.com/mozilla/webcompat-blipz-experiment/
 - https://github.com/mozilla/blurts-addon/
-- https://github.com/mikedeboer/shield-search-nudges
 - https://github.com/mozilla/shield-studies-addon-utils/tree/master/examples/small-study
 - https://github.com/mozilla/shield-studies-addon-template
 - https://github.com/motin/taar-experiment-v3-shield-study
+- https://github.com/florian/federated-learning-addon
+- https://github.com/mikedeboer/shield-search-nudges
 
 Note that some of these projects require you to install npm dependencies so they can call the [**shield-studies-addon-utils** <kbd>copyStudyUtils</kbd> command](https://github.com/mozilla/shield-studies-addon-utils/blob/master/bin/copyStudyUtils.js).
