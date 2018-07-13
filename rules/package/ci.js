@@ -9,17 +9,21 @@ module.exports = class License extends Rule {
    * @constructor
    * @param  {object} cfg     Contents of the package.json file.
    * @param  {string} cfgPath Path to the package.json file.
+   * @param  {object} flags   Flags via the CLI parser.
    */
-  constructor(cfg, cfgPath) {
-    super(cfgPath);
+  constructor(cfg, cfgPath, flags) {
+    super(cfgPath, flags);
     this.package = cfg;
     this.projectPath = dirname(cfgPath);
+    this.name = "rules/package/ci";
   }
 
   validate() {
+    this.logger.verbose(this.name);
+
     const hasCI = [".travis.yml", "circle.yml", ".circleci"].some(ciConfig => {
       try {
-        fileExists(join(this.projectPath, ciConfig));
+        fileExists(join(this.configDir, ciConfig));
         return true;
       } catch (err) {
         return false;
