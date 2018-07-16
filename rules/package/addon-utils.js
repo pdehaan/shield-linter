@@ -18,7 +18,11 @@ module.exports = class AddonUtils extends Rule {
 
   checkLatest(currentVersion, name) {
     const latestVersion = execSync(`npm info ${name} version`, {encoding: "utf-8"}).trim();
-    return {latestVersion, isLatestVersion: semver.satisfies(latestVersion, currentVersion)};
+    const isLatestVersion = semver.satisfies(latestVersion, currentVersion);
+    return {
+      latestVersion,
+      isLatestVersion
+    };
   }
 
   validate() {

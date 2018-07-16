@@ -1,4 +1,3 @@
-const {join} = require("path");
 const {Rule, fileExists} = require("../../lib");
 
 /**
@@ -20,7 +19,7 @@ module.exports = class ExperimentApis extends Rule {
       this.logger.error(`Missing "${label}" key in manifest.json`);
       return;
     }
-    if (!fileExists(join(this.manifestDir, file))) {
+    if (!fileExists(this.manifestDir, file)) {
       this.logger.error(`Missing "${label}" file: ${file}`);
     }
   }

@@ -1,4 +1,3 @@
-const {join} = require("path");
 const {Rule, fileExists} = require("../../lib");
 
 /**
@@ -20,7 +19,7 @@ module.exports = class ExperimentApis extends Rule {
 
     if (this.manifest.background && this.manifest.background.scripts) {
       this.manifest.background.scripts.forEach(file => {
-        if (!fileExists(join(this.manifestDir, file))) {
+        if (!fileExists(this.manifestDir, file)) {
           this.logger.error(`Missing "${file}" background script`);
         }
       });

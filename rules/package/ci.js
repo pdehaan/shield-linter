@@ -1,4 +1,3 @@
-const {join} = require("path");
 const {Rule, fileExists} = require("../../lib");
 
 /**
@@ -20,7 +19,7 @@ module.exports = class License extends Rule {
 
     const CI_FILES = [".travis.yml", "circle.yml", ".circleci"];
 
-    const hasCI = CI_FILES.some(ciConfig => fileExists(join(this.configDir, ciConfig)));
+    const hasCI = CI_FILES.some(ciConfig => fileExists(this.configDir, ciConfig));
     if (!hasCI) {
       this.logger.warn(`Missing Travis or Circle CI configs`);
     }
