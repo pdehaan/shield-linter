@@ -1,4 +1,3 @@
-const {dirname, join} = require("path");
 const {Rule, fileExists} = require("../../lib");
 
 /**
@@ -11,26 +10,18 @@ module.exports = class License extends Rule {
    * @param  {string} cfgPath Path to the package.json file.
    * @param  {object} flags   Flags via the CLI parser.
    */
-  constructor(cfg, cfgPath, flags) {
-    super(cfgPath, flags);
-    this.package = cfg;
-    this.projectPath = dirname(cfgPath);
-    this.name = "rules/package/ci";
+  constructor(...args) {
+    super(...args, __filename);
   }
 
   validate() {
     this.logger.verbose(this.name);
 
-    const hasCI = [".travis.yml", "circle.yml", ".circleci"].some(ciConfig => {
-      try {
-        fileExists(join(this.configDir, ciConfig));
-        return true;
-      } catch (err) {
-        return false;
-      }
-    });
+    const CI_FILES = [".travis.yml", "circle.yml", ".circleci"];
+
+    const hasCI = CI_FILES.some(ciConfig => fileExists(this.configDir, ciConfig));
     if (!hasCI) {
-      this.logger.error(`Missing Travis or Circle CI configs`);
+      this.logger.warn(`Missing Travis or Circle CI configs`);
     }
   }
 };

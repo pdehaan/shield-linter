@@ -10,9 +10,8 @@ module.exports = class Version extends Rule {
    * @param  {string} cfgPath Path to the manifest.json file.
    * @param  {object} flags   Flags via the CLI parser.
    */
-  constructor(cfg, cfgPath, flags) {
-    super(cfgPath, flags, "rules/manifest/version");
-    this.manifest = cfg;
+  constructor(...args) {
+    super(...args, __filename);
   }
 
   validate() {

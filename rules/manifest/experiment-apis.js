@@ -1,4 +1,3 @@
-const {dirname, join} = require("path");
 const {Rule, fileExists} = require("../../lib");
 
 /**
@@ -11,41 +10,35 @@ module.exports = class ExperimentApis extends Rule {
    * @param  {string} cfgPath Path to the manifest.json file.
    * @param  {object} flags   Flags via the CLI parser.
    */
-  constructor(cfg, cfgPath, flags) {
-    super(cfgPath, flags, "rules/manifest/experiment-apis");
-    this.manifest = cfg;
-    this.manifestDir = dirname(cfgPath);
-    this.experimentApisKey = "experiment_apis";
+  constructor(...args) {
+    super(...args, __filename);
+  }
+
+  _checkFile(file, label) {
+    if (!file) {
+      this.logger.error(`Missing "${label}" key in manifest.json`);
+      return;
+    }
+    if (!fileExists(this.manifestDir, file)) {
+      this.logger.error(`Missing "${label}" file: ${file}`);
+    }
   }
 
   validate() {
     this.logger.verbose(this.name);
 
-    if (!this.manifest.hasOwnProperty(this.experimentApisKey)) {
-      this.logger.warn(`Missing "${this.experimentApisKey}" key`);
+    const experimentApisKey = "experiment_apis";
+
+    if (!this.manifest.hasOwnProperty(experimentApisKey)) {
+      this.logger.warn(`Missing "${experimentApisKey}" key`);
       return;
     }
 
-    for (const {schema, parent} of Object.values(this.manifest.experiment_apis)) {
-      if (schema) {
-        try {
-          fileExists(join(this.manifestDir, schema));
-        } catch (err) {
-          this.logger.error(`Missing "${this.experimentApisKey}...schema" file: ${schema}`)
-        }
-      } else {
-        this.logger.error(`Missing "${this.experimentApisKey}...schema" key in manifest.json`);
-      }
-
-      if (parent && parent.script) {
-        try {
-          fileExists(join(this.manifestDir, parent.script));
-        } catch (err) {
-          this.logger.error(`Missing "${this.experimentApisKey}...parent.script" file: ${parent.script}`);
-        }
-      } else {
-        this.logger.error(`Missing "${this.experimentApisKey}...parent.script" key in manifest.json`);
-      }
-    }
+    const experimentApis = this.manifest.experiment_apis;
+    Object.keys(experimentApis).forEach(key => {
+      const {schema, parent} = experimentApis[key];
+      this._checkFile(schema, `${experimentApisKey}.${key}.schema`);
+      this._checkFile(parent && parent.script, `${experimentApisKey}.${key}.parent.script`)
+    });
   }
 };

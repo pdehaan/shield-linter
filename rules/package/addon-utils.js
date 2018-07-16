@@ -1,3 +1,4 @@
+const {execSync} = require("child_process");
 const semver = require("semver");
 const {Rule} = require("../../lib");
 
@@ -11,25 +12,31 @@ module.exports = class AddonUtils extends Rule {
    * @param  {string} cfgPath Path to the package.json file.
    * @param  {object} flags   Flags via the CLI parser.
    */
-  constructor(cfg, cfgPath, flags) {
-    super(cfgPath, flags, "rules/package/addon-utils");
-    this.package = cfg;
+  constructor(...args) {
+    super(...args, __filename);
+  }
+
+  checkLatest(currentVersion, name) {
+    const latestVersion = execSync(`npm info ${name} version`, {encoding: "utf-8"}).trim();
+    const isLatestVersion = semver.satisfies(latestVersion, currentVersion);
+    return {
+      latestVersion,
+      isLatestVersion
+    };
   }
 
   validate() {
     this.logger.verbose(this.name);
 
     const addonUtilsPackage = "shield-studies-addon-utils";
-    const addonUtilsMinVersion = "5.0.0";
-    const allDependencies = Object.assign({}, this.package.dependencies, this.package.devDependencies);
-    const hasAddonUtils = Object.keys(allDependencies).includes(addonUtilsPackage);
+    const addonUtilsMinVersion = semver.coerce("5").version;
 
-    if (!hasAddonUtils) {
+    if (!this.packageJson.hasDependency(addonUtilsPackage)) {
       this.logger.info(`${this.package.name} shield study is not using ${addonUtilsPackage}`);
       return;
     }
 
-    const addonUtilsPackageVersion = allDependencies[addonUtilsPackage];
+    const addonUtilsPackageVersion = this.packageJson.dependencyVersion(addonUtilsPackage);
     if (!semver.validRange(addonUtilsPackageVersion)) {
       this.logger.warn(`Invalid ${addonUtilsPackage} version. Found ${addonUtilsPackageVersion}`);
       return;
@@ -38,6 +45,11 @@ module.exports = class AddonUtils extends Rule {
     if (!semver.ltr(addonUtilsMinVersion, addonUtilsPackageVersion)) {
       this.logger.warn(`Expected ${addonUtilsPackage}@${addonUtilsMinVersion} or newer. Found ${addonUtilsPackageVersion}`);
       return;
+    }
+
+    const {latestVersion, isLatestVersion} = this.checkLatest(addonUtilsPackageVersion, addonUtilsPackage);
+    if (!isLatestVersion) {
+      this.logger.warn(`Please install the latest version of "${addonUtilsPackage}". Current: ${addonUtilsPackageVersion}. Latest: ${latestVersion}`);
     }
   }
 };

@@ -10,9 +10,8 @@ module.exports = class ApplicationsGeckoId extends Rule {
    * @param  {string} cfgPath Path to the manifest.json file.
    * @param  {object} flags   Flags via the CLI parser.
    */
-  constructor(cfg, cfgPath, flags) {
-    super(cfgPath, flags, "rules/manifest/applications-gecko-id");
-    this.manifest = cfg;
+  constructor(...args) {
+    super(...args, __filename);
   }
 
   validate() {
@@ -20,6 +19,7 @@ module.exports = class ApplicationsGeckoId extends Rule {
 
     try {
       const applicationId = this.manifest.applications.gecko.id;
+      // returns ["@shield.mozilla.org", ...]
       const allowedGeckoIds = ["shield", "pioneer"].map(value => `@${value}.mozilla.org`);
       const allowedGeckoStrings = allowedGeckoIds.join(" or ");
 
