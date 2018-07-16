@@ -1,6 +1,3 @@
-module.exports = (...args) => [
-  require("./addon-utils"),
-  require("./ci"),
-  require("./eslint"),
-  require("./license"),
-].map(rule => new rule(...args));
+const {requireDir} = require("../../lib");
+
+module.exports = (...args) => requireDir(__dirname).map(Rule => new Rule(...args));

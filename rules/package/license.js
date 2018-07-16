@@ -10,10 +10,8 @@ module.exports = class License extends Rule {
    * @param  {string} cfgPath Path to the package.json file.
    * @param  {object} flags   Flags via the CLI parser.
    */
-  constructor(cfg, cfgPath, flags) {
-    super(cfgPath, flags);
-    this.package = cfg;
-    this.name = "rules/package/license";
+  constructor(...args) {
+    super(...args, __filename);
   }
 
   validate() {
