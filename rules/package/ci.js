@@ -18,7 +18,7 @@ module.exports = class License extends Rule {
     this.logger.verbose(this.name);
 
     const log = this.logger[severity];
-    const CI_FILES = [".travis.yml", "circle.yml", ".circleci"];
+    const CI_FILES = [".travis.yml", "circle.yml", ".circleci/config.yml"];
 
     const hasCI = CI_FILES.some(ciConfig => fileExists(this.configDir, ciConfig));
     if (!hasCI) {
