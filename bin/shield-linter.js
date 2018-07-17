@@ -89,7 +89,7 @@ function _loadConfig(cfgPath, cfgRules, flags, ruleOverride) {
 
   try {
     const cfg = require(path.resolve(cfgPath));
-    let rules = cfgRules(cfg, cfgPath, flags);
+    const rules = cfgRules(cfg, cfgPath, flags);
 
     for (const rule of rules) {
       // If the user has a custom .shieldlinterrc file with rules defined...
