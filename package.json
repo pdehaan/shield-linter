@@ -1,5 +1,5 @@
 {
-  "name": "shield-linter",
+  "name": "shieldlinter",
   "description": "Let's try and validate some shield study settings and configs.",
   "version": "1.0.0",
   "author": "Moe Zilla",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "meow": "^5.0.0",
+    "rc": "1.2.8",
     "require-all": "3.0.0",
     "semver": "^5.5.0"
   },

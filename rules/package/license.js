@@ -14,10 +14,10 @@ module.exports = class License extends Rule {
     super(...args);
   }
 
-  validate(severity="warn", ...options) {
+  validate(severity=this.severity.WARN, ...options) {
     this.logger.verbose(this.name);
 
-    const log = this.logger[severity];
+    const log = this.logger.severity(severity);
     const MPL2_LICENSE = "MPL-2.0";
 
     if (!this.package.license) {

@@ -14,10 +14,10 @@ module.exports = class ApplicationsGeckoId extends Rule {
     super(...args);
   }
 
-  validate(severity="warn", ...options) {
+  validate(severity=this.severity.WARN, ...options) {
     this.logger.verbose(this.name);
 
-    const log = this.logger[severity];
+    const log = this.logger.severity(severity);
 
     try {
       const applicationId = this.manifest.applications.gecko.id;

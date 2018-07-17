@@ -14,11 +14,15 @@ module.exports = class License extends Rule {
     super(...args);
   }
 
-  validate(severity="warn", ...options) {
+  validate(severity=this.severity.WARN, ...options) {
     this.logger.verbose(this.name);
 
-    const log = this.logger[severity];
-    const CI_FILES = [".travis.yml", "circle.yml", ".circleci/config.yml"];
+    const log = this.logger.severity(severity);
+    const CI_FILES = [
+      ".travis.yml",
+      "circle.yml",
+      ".circleci/config.yml"
+    ];
 
     const hasCI = CI_FILES.some(ciConfig => fileExists(this.configDir, ciConfig));
     if (!hasCI) {
