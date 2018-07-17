@@ -14,10 +14,11 @@ module.exports = class ExperimentApis extends Rule {
     super(...args);
   }
 
-  validate(severity="warn", ...options) {
+  validate(severity=this.severity.WARN, ...options) {
     this.logger.verbose(this.name);
 
-    const log = this.logger[severity];
+    const log = this.logger.severity(severity);
+
     if (this.manifest.background && this.manifest.background.scripts) {
       this.manifest.background.scripts.forEach(file => {
         if (!fileExists(this.manifestDir, file)) {

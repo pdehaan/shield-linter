@@ -14,20 +14,10 @@ module.exports = class ExperimentApis extends Rule {
     super(...args);
   }
 
-  _checkFile(file, label, log) {
-    if (!file) {
-      log(`Missing "${label}" key in manifest.json`);
-      return;
-    }
-    if (!fileExists(this.manifestDir, file)) {
-      log(`Missing "${label}" file: ${file}`);
-    }
-  }
-
-  validate(severity="warn", ...options) {
+  validate(severity=this.severity.WARN, ...options) {
     this.logger.verbose(this.name);
 
-    const log = this.logger[severity];
+    const log = this.logger.severity(severity);
     const experimentApisKey = "experiment_apis";
 
     if (!this.manifest.hasOwnProperty(experimentApisKey)) {
@@ -41,5 +31,15 @@ module.exports = class ExperimentApis extends Rule {
       this._checkFile(schema, `${experimentApisKey}.${key}.schema`, log);
       this._checkFile(parent && parent.script, `${experimentApisKey}.${key}.parent.script`, log)
     });
+  }
+
+  _checkFile(file, label, log) {
+    if (!file) {
+      log(`Missing "${label}" key in manifest.json`);
+      return;
+    }
+    if (!fileExists(this.manifestDir, file)) {
+      log(`Missing "${label}" file: ${file}`);
+    }
   }
 };

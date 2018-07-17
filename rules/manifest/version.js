@@ -14,11 +14,12 @@ module.exports = class Version extends Rule {
     super(...args);
   }
 
-  validate(severity="warn", ...options) {
+  validate(severity=this.severity.WARN, ...options) {
     this.logger.verbose(this.name);
 
-    const log = this.logger[severity];
+    const log = this.logger.severity(severity);
     const {version} = this.manifest;
+
     if (version.split(".").length < 2) {
       log(`Unexpected version number format. Expected "major.minor[.patch]", got ${version}`);
     }

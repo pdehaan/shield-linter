@@ -16,19 +16,10 @@ module.exports = class AddonUtils extends Rule {
     super(...args);
   }
 
-  checkLatest(currentVersion, name) {
-    const latestVersion = execSync(`npm info ${name} version`, {encoding: "utf-8"}).trim();
-    const isLatestVersion = semver.satisfies(latestVersion, currentVersion);
-    return {
-      latestVersion,
-      isLatestVersion
-    };
-  }
-
-  validate(severity="warn", ...options) {
+  validate(severity=this.severity.WARN, ...options) {
     this.logger.verbose(this.name);
 
-    const log = this.logger[severity];
+    const log = this.logger.severity(severity);
     const addonUtilsPackage = "shield-studies-addon-utils";
     const addonUtilsMinVersion = semver.coerce("5").version;
 
@@ -52,5 +43,14 @@ module.exports = class AddonUtils extends Rule {
     if (!isLatestVersion) {
       log(`Please install the latest version of "${addonUtilsPackage}". Current: ${addonUtilsPackageVersion}. Latest: ${latestVersion}`);
     }
+  }
+
+  checkLatest(currentVersion, name) {
+    const latestVersion = execSync(`npm info ${name} version`, {encoding: "utf-8"}).trim();
+    const isLatestVersion = semver.satisfies(latestVersion, currentVersion);
+    return {
+      latestVersion,
+      isLatestVersion
+    };
   }
 };
