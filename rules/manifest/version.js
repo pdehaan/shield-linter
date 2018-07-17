@@ -11,15 +11,16 @@ module.exports = class Version extends Rule {
    * @param  {object} flags   Flags via the CLI parser.
    */
   constructor(...args) {
-    super(...args, __filename);
+    super(...args);
   }
 
-  validate() {
+  validate(severity="warn", ...options) {
     this.logger.verbose(this.name);
 
+    const log = this.logger[severity];
     const {version} = this.manifest;
     if (version.split(".").length < 2) {
-      this.logger.log(`Unexpected version number format. Expected "major.minor[.patch]", got ${version}`);
+      log(`Unexpected version number format. Expected "major.minor[.patch]", got ${version}`);
     }
   }
 };

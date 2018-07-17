@@ -12,12 +12,13 @@ module.exports = class ESLint extends Rule {
    * @param  {object} flags   Flags via the CLI parser.
    */
   constructor(...args) {
-    super(...args, __filename);
+    super(...args);
   }
 
-  validate() {
+  validate(severity="warn", ...options) {
     this.logger.verbose(this.name);
 
+    const log = this.logger[severity];
     const prereqDependencies = ["react", "eslint"];
     const requiredPlugins = ["react", "jsx-a11y"];
 
@@ -26,7 +27,7 @@ module.exports = class ESLint extends Rule {
       requiredPlugins
         .map(name => `eslint-plugin-${name}`)
         .filter(name => !this.packageJson.hasDependency(name))
-        .forEach(name => this.logger.error(`${this.package.name} shield study is not using "${name}" package`));
+        .forEach(name => log(`${this.package.name} shield study is not using "${name}" package`));
 
       [".eslintrc", ".eslintrc.js", ".eslintrc.json"]
         .filter(eslintrc => fileExists(this.packageDir, eslintrc))
@@ -35,7 +36,7 @@ module.exports = class ESLint extends Rule {
           requiredPlugins.forEach(name => {
             const pluginName = `plugin:${name}/recommended`;
             if (!config.extends.includes(pluginName)) {
-              this.logger.warn(`${file} does not extend "${pluginName}"`);
+              log(`${file} does not extend "${pluginName}"`);
             }
           });
         });

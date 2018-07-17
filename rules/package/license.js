@@ -11,21 +11,22 @@ module.exports = class License extends Rule {
    * @param  {object} flags   Flags via the CLI parser.
    */
   constructor(...args) {
-    super(...args, __filename);
+    super(...args);
   }
 
-  validate() {
+  validate(severity="warn", ...options) {
     this.logger.verbose(this.name);
 
+    const log = this.logger[severity];
     const MPL2_LICENSE = "MPL-2.0";
 
     if (!this.package.license) {
-      this.logger.error(`Does not include a "license" property`);
+      log(`Does not include a "license" property`);
       return;
     }
 
     if (this.package.license !== MPL2_LICENSE) {
-      this.logger.warn(`Does not use ${MPL2_LICENSE} license. Found ${this.package.license}`);
+      log(`Does not use ${MPL2_LICENSE} license. Found ${this.package.license}`);
     }
   }
 };

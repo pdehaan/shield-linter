@@ -11,17 +11,18 @@ module.exports = class ESLint extends Rule {
    * @param  {object} flags   Flags via the CLI parser.
    */
   constructor(...args) {
-    super(...args, __filename);
+    super(...args);
   }
 
-  validate() {
+  validate(severity="warn", ...options) {
     this.logger.verbose(this.name);
 
+    const log = this.logger[severity];
     const requiredDependencies = ["eslint", "eslint-plugin-mozilla"];
 
     for (const name of requiredDependencies) {
       if (!this.packageJson.hasDependency(name)) {
-        this.logger.error(`${this.package.name} shield study is not using "${name}" package`);
+        log(`${this.package.name} shield study is not using "${name}" package`);
       }
     }
   }

@@ -11,11 +11,13 @@ module.exports = class ApplicationsGeckoId extends Rule {
    * @param  {object} flags   Flags via the CLI parser.
    */
   constructor(...args) {
-    super(...args, __filename);
+    super(...args);
   }
 
-  validate() {
+  validate(severity="warn", ...options) {
     this.logger.verbose(this.name);
+
+    const log = this.logger[severity];
 
     try {
       const applicationId = this.manifest.applications.gecko.id;
@@ -24,7 +26,7 @@ module.exports = class ApplicationsGeckoId extends Rule {
       const allowedGeckoStrings = allowedGeckoIds.join(" or ");
 
       if (!allowedGeckoIds.some(suffix => applicationId.endsWith(suffix))) {
-        this.logger.warn(`"applications.gecko.id" does not end with ${allowedGeckoStrings}. Found ${applicationId}`);
+        log(`"applications.gecko.id" does not end with ${allowedGeckoStrings}. Found ${applicationId}`);
       }
     } catch (err) {
       this.logger.error(err);
