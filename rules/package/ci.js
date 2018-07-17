@@ -11,17 +11,18 @@ module.exports = class License extends Rule {
    * @param  {object} flags   Flags via the CLI parser.
    */
   constructor(...args) {
-    super(...args, __filename);
+    super(...args);
   }
 
-  validate() {
+  validate(severity="warn", ...options) {
     this.logger.verbose(this.name);
 
+    const log = this.logger[severity];
     const CI_FILES = [".travis.yml", "circle.yml", ".circleci"];
 
     const hasCI = CI_FILES.some(ciConfig => fileExists(this.configDir, ciConfig));
     if (!hasCI) {
-      this.logger.warn(`Missing Travis or Circle CI configs`);
+      log(`Missing Travis or Circle CI configs`);
     }
   }
 };

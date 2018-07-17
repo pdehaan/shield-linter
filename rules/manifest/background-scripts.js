@@ -11,21 +11,22 @@ module.exports = class ExperimentApis extends Rule {
    * @param  {object} flags   Flags via the CLI parser.
    */
   constructor(...args) {
-    super(...args, __filename);
+    super(...args);
   }
 
-  validate() {
+  validate(severity="warn", ...options) {
     this.logger.verbose(this.name);
 
+    const log = this.logger[severity];
     if (this.manifest.background && this.manifest.background.scripts) {
       this.manifest.background.scripts.forEach(file => {
         if (!fileExists(this.manifestDir, file)) {
-          this.logger.error(`Missing "${file}" background script`);
+          log(`Missing "${file}" background script`);
         }
       });
       return;
     }
 
-    this.logger.warn(`Missing "background.scripts" key`);
+    log(`Missing "background.scripts" key`);
   }
 };

@@ -11,34 +11,35 @@ module.exports = class ExperimentApis extends Rule {
    * @param  {object} flags   Flags via the CLI parser.
    */
   constructor(...args) {
-    super(...args, __filename);
+    super(...args);
   }
 
-  _checkFile(file, label) {
+  _checkFile(file, label, log) {
     if (!file) {
-      this.logger.error(`Missing "${label}" key in manifest.json`);
+      log(`Missing "${label}" key in manifest.json`);
       return;
     }
     if (!fileExists(this.manifestDir, file)) {
-      this.logger.error(`Missing "${label}" file: ${file}`);
+      log(`Missing "${label}" file: ${file}`);
     }
   }
 
-  validate() {
+  validate(severity="warn", ...options) {
     this.logger.verbose(this.name);
 
+    const log = this.logger[severity];
     const experimentApisKey = "experiment_apis";
 
     if (!this.manifest.hasOwnProperty(experimentApisKey)) {
-      this.logger.warn(`Missing "${experimentApisKey}" key`);
+      log(`Missing "${experimentApisKey}" key`);
       return;
     }
 
     const experimentApis = this.manifest.experiment_apis;
     Object.keys(experimentApis).forEach(key => {
       const {schema, parent} = experimentApis[key];
-      this._checkFile(schema, `${experimentApisKey}.${key}.schema`);
-      this._checkFile(parent && parent.script, `${experimentApisKey}.${key}.parent.script`)
+      this._checkFile(schema, `${experimentApisKey}.${key}.schema`, log);
+      this._checkFile(parent && parent.script, `${experimentApisKey}.${key}.parent.script`, log)
     });
   }
 };

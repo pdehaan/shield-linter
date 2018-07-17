@@ -11,6 +11,7 @@ module.exports = {
     "eqeqeq": "error",
     "indent": ["error", 2],
     "no-console": "off",
+    "no-unused-vars": ["error", {vars: "all", args: "after-used", ignoreRestSiblings: true, argsIgnorePattern: "options"}],
     "no-var": "error",
     "one-var": ["error", "never"],
     "prefer-const": "error",

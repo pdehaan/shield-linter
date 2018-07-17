@@ -3,6 +3,9 @@
 const path = require("path");
 const meow = require("meow");
 
+const {fileExists} = require("../lib");
+const rules = require("../rules");
+
 const cli = meow(`
 
   Usage docs:
@@ -33,11 +36,15 @@ const cli = meow(`
   }
 });
 
-function main({flags}) {
-  const {manifestPath, packagePath} = flags;
-
-  manifestPath && lintManifest(manifestPath, flags);
-  packagePath && lintPackage(packagePath, flags);
+function main(rules, {flags}) {
+  if (!flags.manifestPath && !flags.packagePath) {
+    cli.showHelp();
+    return;
+  }
+  // TODO: attempt to load some sort of config file here, and then pass it down into the functions below.
+  // This could allow us to run a subset of rules and pass user severities/options.
+  lintManifest(rules.manifest, flags);
+  lintPackage(rules.package, flags);
 }
 
 /**
@@ -45,8 +52,8 @@ function main({flags}) {
  * @param  {string} manifestPath Relative/absolute path to a Shield study's manifest.json file.
  * @return {void}
  */
-function lintManifest(manifestPath, flags) {
-  _loadConfig(manifestPath, "../rules/manifest", flags);
+function lintManifest(manifest, flags) {
+  _loadConfig(flags.manifestPath, manifest, flags);
 }
 
 /**
@@ -54,8 +61,8 @@ function lintManifest(manifestPath, flags) {
  * @param  {string} packagePath Relative/absolute path to a Shield study's package.json file.
  * @return {void}
  */
-function lintPackage(packagePath, flags) {
-  _loadConfig(packagePath, "../rules/package", flags);
+function lintPackage(package, flags) {
+  _loadConfig(flags.packagePath, package, flags);
 }
 
 /**
@@ -65,19 +72,27 @@ function lintPackage(packagePath, flags) {
  * @param  {string} cfgRulesPath Relative path to the config specific rules to run.
  * @return {void}
  */
-function _loadConfig(cfgPath, cfgRulesPath, flags) {
+function _loadConfig(cfgPath, cfgRules, flags) {
+  if (!cfgPath) return;
+  if (!fileExists(path.resolve(cfgPath))) {
+    console.error(`ERROR: ${cfgPath} does not exist`);
+    return;
+  }
+  if (flags.verbose) {
+    console.log(`LINTING: ${cfgPath}...`);
+  }
   try {
     const cfg = require(path.resolve(cfgPath));
-    const rules = require(cfgRulesPath)(cfg, cfgPath, flags);
+    const rules = cfgRules(cfg, cfgPath, flags);
 
     for (const rule of rules) {
+      // console.log(rule.name);
       rule.validate();
     }
-
   } catch (err) {
     console.error(`${path.basename(cfgPath)}:`, err);
-    return;
+    process.exitCode = 3;
   }
 }
 
-main(cli);
+main(rules, cli);

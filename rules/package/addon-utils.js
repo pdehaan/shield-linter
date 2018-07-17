@@ -13,7 +13,7 @@ module.exports = class AddonUtils extends Rule {
    * @param  {object} flags   Flags via the CLI parser.
    */
   constructor(...args) {
-    super(...args, __filename);
+    super(...args);
   }
 
   checkLatest(currentVersion, name) {
@@ -25,31 +25,32 @@ module.exports = class AddonUtils extends Rule {
     };
   }
 
-  validate() {
+  validate(severity="warn", ...options) {
     this.logger.verbose(this.name);
 
+    const log = this.logger[severity];
     const addonUtilsPackage = "shield-studies-addon-utils";
     const addonUtilsMinVersion = semver.coerce("5").version;
 
     if (!this.packageJson.hasDependency(addonUtilsPackage)) {
-      this.logger.info(`${this.package.name} shield study is not using ${addonUtilsPackage}`);
+      log(`${this.package.name} shield study is not using ${addonUtilsPackage}`);
       return;
     }
 
     const addonUtilsPackageVersion = this.packageJson.dependencyVersion(addonUtilsPackage);
     if (!semver.validRange(addonUtilsPackageVersion)) {
-      this.logger.warn(`Invalid ${addonUtilsPackage} version. Found ${addonUtilsPackageVersion}`);
+      log(`Invalid ${addonUtilsPackage} version. Found ${addonUtilsPackageVersion}`);
       return;
     }
 
     if (!semver.ltr(addonUtilsMinVersion, addonUtilsPackageVersion)) {
-      this.logger.warn(`Expected ${addonUtilsPackage}@${addonUtilsMinVersion} or newer. Found ${addonUtilsPackageVersion}`);
+      log(`Expected ${addonUtilsPackage}@${addonUtilsMinVersion} or newer. Found ${addonUtilsPackageVersion}`);
       return;
     }
 
     const {latestVersion, isLatestVersion} = this.checkLatest(addonUtilsPackageVersion, addonUtilsPackage);
     if (!isLatestVersion) {
-      this.logger.warn(`Please install the latest version of "${addonUtilsPackage}". Current: ${addonUtilsPackageVersion}. Latest: ${latestVersion}`);
+      log(`Please install the latest version of "${addonUtilsPackage}". Current: ${addonUtilsPackageVersion}. Latest: ${latestVersion}`);
     }
   }
 };
