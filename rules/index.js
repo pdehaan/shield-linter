@@ -1,5 +1,5 @@
-const {join} = require("path");
-const requireAll = require("require-all");
+import {join} from "path";
+import requireAll from "require-all";
 
 /**
   {
@@ -12,7 +12,7 @@ const requireAll = require("require-all");
     ]
   }
 */
-module.exports = {
+export default {
   manifest: getRules("manifest"),
   package: getRules("package")
 };
@@ -32,7 +32,7 @@ function getRules(category, ignoreFiles=["index.js"]) {
   });
 
   return (...args) => Object.entries(rules)
-    .map(([name, Rule]) => new Rule(...args, rulename(category, name)));
+    .map(([name, Rule]) => new Rule.default(...args, rulename(category, name)));
 }
 
 /**
@@ -44,5 +44,3 @@ function getRules(category, ignoreFiles=["index.js"]) {
 function rulename(category, name) {
   return `${category}/${name.replace(/\.js$/i, "")}`;
 }
-
-

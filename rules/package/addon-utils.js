@@ -1,11 +1,11 @@
-const {execSync} = require("child_process");
-const semver = require("semver");
-const {Rule} = require("../../lib");
+import {execSync} from "child_process";
+import semver from "semver";
+import {Rule} from "../../lib";
 
 /**
  * Checks that the package.json file has a "shield-studies-addon-utils" dependency or devDependency, and it's at least a v5 version.
  */
-module.exports = class AddonUtils extends Rule {
+export default class AddonUtils extends Rule {
   /**
    * @constructor
    * @param  {object} cfg     Contents of the package.json file.
@@ -53,4 +53,4 @@ module.exports = class AddonUtils extends Rule {
       isLatestVersion
     };
   }
-};
+}

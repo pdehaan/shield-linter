@@ -1,9 +1,9 @@
-const {Rule, fileExists} = require("../../lib");
+import {Rule, fileExists} from "../../lib";
 
 /**
  * Checks that the manifest.json's `sidebar_action` files exist.
  */
-module.exports = class SidebarAction extends Rule {
+export default class SidebarAction extends Rule {
   /**
    * @constructor
    * @param  {object} cfg     Contents of the manifest.json file.
@@ -38,4 +38,4 @@ module.exports = class SidebarAction extends Rule {
       log(`Missing "${label}" file: ${file}`);
     }
   }
-};
+}

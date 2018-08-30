@@ -1,10 +1,10 @@
-const checkLinks = require("check-links");
-const {Rule} = require("../../lib");
+import checkLinks from "check-links";
+import {Rule} from "../../lib";
 
 /**
  * Checks that the manifest.json's `homepage_url` resolves with a 200 status code.
  */
-module.exports = class HomepageUrl extends Rule {
+export default class HomepageUrl extends Rule {
   /**
    * @constructor
    * @param  {object} cfg     Contents of the manifest.json file.
@@ -29,4 +29,4 @@ module.exports = class HomepageUrl extends Rule {
       }
     }
   }
-};
+}

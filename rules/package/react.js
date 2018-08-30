@@ -1,10 +1,10 @@
-const {join} = require("path");
-const {Rule, fileExists} = require("../../lib");
+import {join} from "path";
+import {Rule, fileExists} from "../../lib";
 
 /**
  * Checks that the package.json file has an "react" dependency or devDependency, and if so, make sure it's using the ESLint recommended plugins.
  */
-module.exports = class ESLint extends Rule {
+export default class ESLint extends Rule {
   /**
    * @constructor
    * @param  {object} cfg     Contents of the package.json file.
@@ -45,4 +45,4 @@ module.exports = class ESLint extends Rule {
       // ESLint uses the https://github.com/nodeca/js-yaml module.
     }
   }
-};
+}

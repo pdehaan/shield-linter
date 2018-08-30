@@ -1,9 +1,9 @@
-const {Rule} = require("../../lib");
+import {Rule} from "../../lib";
 
 /**
  * Checks that the manifest.json's `applications.gecko.id` ends with "@shield.mozilla.org" or "@pioneer.mozilla.org".
  */
-module.exports = class ApplicationsGeckoId extends Rule {
+export default class ApplicationsGeckoId extends Rule {
   /**
    * @constructor
    * @param  {object} cfg     Contents of the manifest.json file.
@@ -32,4 +32,4 @@ module.exports = class ApplicationsGeckoId extends Rule {
       this.logger.error(err);
     }
   }
-};
+}

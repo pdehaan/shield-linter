@@ -1,9 +1,9 @@
-const {Rule, fileExists} = require("../../lib");
+import {Rule, fileExists} from "../../lib";
 
 /**
  * Checks that the add-on uses Travis-CI or Circle-CI (by looking for specific files/folders).
  */
-module.exports = class License extends Rule {
+export default class License extends Rule {
   /**
    * @constructor
    * @param  {object} cfg     Contents of the package.json file.
@@ -29,4 +29,4 @@ module.exports = class License extends Rule {
       log(`Missing Travis or Circle CI configs`);
     }
   }
-};
+}

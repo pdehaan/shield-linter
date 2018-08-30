@@ -1,9 +1,9 @@
-const {Rule, fileExists} = require("../../lib");
+import {Rule, fileExists} from "../../lib";
 
 /**
  * Checks that the manifest.json's `experiment_apis` key exists and has valid files specified for `schema` and `parent.script` keys.
  */
-module.exports = class ExperimentApis extends Rule {
+export default class ExperimentApis extends Rule {
   /**
    * @constructor
    * @param  {object} cfg     Contents of the manifest.json file.
@@ -42,4 +42,4 @@ module.exports = class ExperimentApis extends Rule {
       log(`Missing "${label}" file: ${file}`);
     }
   }
-};
+}

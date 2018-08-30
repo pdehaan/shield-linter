@@ -1,16 +1,15 @@
-#!/usr/bin/env node
+#!/usr/bin/env node -r esm
 
-const path = require("path");
+import path from "path";
 
-const meow = require("meow");
-const rc = require("rc");
+import meow from "meow";
+import rc from "rc";
 
-const {fileExists} = require("../lib");
-const rules = require("../rules");
+import {fileExists} from "../lib";
+import rules from "../rules";
 
 
 const cli = meow(`
-
   Usage docs:
 
     shield-linter --manifest-path ./src/manifest.json --package-path ./package.json
@@ -20,7 +19,6 @@ const cli = meow(`
     --package-path,-p  Path to the package.json file. Optional.
 
   Note: If neither the '--manifest-path' or '--package-path' are specified, no tests will be run.
-
   `, {
   flags: {
     manifestPath: {
@@ -66,8 +64,8 @@ function lintManifest(manifest, flags, rules) {
  * @param  {string} packagePath Relative/absolute path to a Shield study's package.json file.
  * @return {void}
  */
-function lintPackage(package, flags, rules) {
-  _loadConfig(flags.packagePath, package, flags, rules);
+function lintPackage(pkg, flags, rules) {
+  _loadConfig(flags.packagePath, pkg, flags, rules);
 }
 
 /**

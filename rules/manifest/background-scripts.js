@@ -1,9 +1,9 @@
-const {Rule, fileExists} = require("../../lib");
+import {Rule, fileExists} from "../../lib";
 
 /**
  * Checks that the manifest.json's `background.scripts` key exists and has valid files specified.
  */
-module.exports = class ExperimentApis extends Rule {
+export default class ExperimentApis extends Rule {
   /**
    * @constructor
    * @param  {object} cfg     Contents of the manifest.json file.
@@ -30,4 +30,4 @@ module.exports = class ExperimentApis extends Rule {
 
     log(`Missing "background.scripts" key`);
   }
-};
+}

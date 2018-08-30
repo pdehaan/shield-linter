@@ -1,9 +1,9 @@
-const {Rule} = require("../../lib");
+import {Rule} from "../../lib";
 
 /**
  * Checks that the package.json file has an "eslint" dependency or devDependency.
  */
-module.exports = class ESLint extends Rule {
+export default class ESLint extends Rule {
   /**
    * @constructor
    * @param  {object} cfg     Contents of the package.json file.
@@ -26,4 +26,4 @@ module.exports = class ESLint extends Rule {
       }
     }
   }
-};
+}

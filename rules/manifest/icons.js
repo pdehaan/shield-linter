@@ -1,9 +1,9 @@
-const {Rule, fileExists} = require("../../lib");
+import {Rule, fileExists} from "../../lib";
 
 /**
  * Checks that the manifest.json's `icons` files exist.
  */
-module.exports = class Icons extends Rule {
+export default class Icons extends Rule {
   /**
    * @constructor
    * @param  {object} cfg     Contents of the manifest.json file.
@@ -37,4 +37,4 @@ module.exports = class Icons extends Rule {
       log(`Missing "${label}" file: ${file}`);
     }
   }
-};
+}

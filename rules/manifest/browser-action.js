@@ -1,9 +1,9 @@
-const {Rule, fileExists} = require("../../lib");
+import {Rule, fileExists} from "../../lib";
 
 /**
  * Checks that the manifest.json's `browser_action` files exist.
  */
-module.exports = class BrowserAction extends Rule {
+export default class BrowserAction extends Rule {
   /**
    * @constructor
    * @param  {object} cfg     Contents of the manifest.json file.
@@ -38,4 +38,4 @@ module.exports = class BrowserAction extends Rule {
       log(`Missing "${label}" file: ${file}`);
     }
   }
-};
+}

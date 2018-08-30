@@ -1,9 +1,9 @@
-const {Rule} = require("../../lib");
+import {Rule} from "../../lib";
 
 /**
  * Checks that the package.json file has an MPL-2.0 license.
  */
-module.exports = class License extends Rule {
+export default class License extends Rule {
   /**
    * @constructor
    * @param  {object} cfg     Contents of the package.json file.
@@ -29,4 +29,4 @@ module.exports = class License extends Rule {
       log(`Does not use ${MPL2_LICENSE} license. Found ${this.package.license}`);
     }
   }
-};
+}
