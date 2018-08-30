@@ -1,5 +1,5 @@
 const checkLinks = require("check-links");
-const {Rule, fileExists} = require("../../lib");
+const {Rule} = require("../../lib");
 
 /**
  * Checks that the manifest.json's `applications.gecko.update_url` resolves with a 200 status code.

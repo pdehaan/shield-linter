@@ -6,6 +6,9 @@ module.exports = {
   extends: [
     "eslint:recommended"
   ],
+  parserOptions: {
+    ecmaVersion: 8
+  },
   root: true,
   rules: {
     "eqeqeq": "error",
